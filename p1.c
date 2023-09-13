@@ -2,10 +2,8 @@
 #include <stdio.h>
 #include "ui.h"
 
-#define MY_BACKGOUND_COLOR RGB(245,245,245)
-#define MY_EDIT_ML_BKCOLOR RGB(235,235,235)
-
-int B1, B2, B3, E1, E2, C1;
+#define MY_BACKGOUND_COLOR RGB(0,245,0)
+#define MY_EDIT_ML_BKCOLOR RGB(0,235,235)
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -19,6 +17,8 @@ char checkBoxVal;
 HWND hWnd;
 HFONT hf;
 
+void app_thread(void *dummy);
+
 void AppendText( HWND hwnd, char *newText )
 {
     SendMessageA(hTxtML, EM_SETSEL, 0, -1); //Select all
@@ -26,58 +26,8 @@ void AppendText( HWND hwnd, char *newText )
     SendMessageA(hTxtML, EM_REPLACESEL, 0, (LPARAM)(newText)); //append text to current pos and scroll down
 }
 
-void fn(void *dummy)
+int WINAPI WinMain(HINSTANCE hInstanciaAct, HINSTANCE hInstanciaPrev, LPSTR IpCmdLine, int iCmdShow)
 {
-        char s[64];
-        while(1)
-        {
-                sprintf(s, "%6d", cnt++);
-                Sleep(100);
-                printf("."); fflush(stdout);
-                
-                char tmp[64];
-                int editlength = GetWindowTextLength(hTxt1);
-                GetWindowText(hTxt1, tmp, editlength+1);
-                printf("[%s]", tmp);
-                
-                if (checkBoxVal)
-                {
-                        AppendText(hTxtML, "\r\n");
-                        AppendText(hTxtML, s);
-                        UpdateWindow(hTxtML);
-                }
-                SetWindowText( hTxt, s);
-                if (cnt>10)
-                {
-                        attivo=1;
-                        backColor=RGB(255,255,0);
-                        UpdateWindow(hTxt);
-                        EnableWindow(hBtn1, FALSE);
-                }
-                if (cnt>100)
-                        EnableWindow(hTxt, FALSE);
-        }
-}
-
-void B_pressed(int i)
-{
-	printf("pressed %d\n", i);
-}
-
-void Text_changed(int i)
-{
-	printf("Text changed %d\n", i);
-}
-
-void CheckBox_change(int i)
-{
-	printf("Checkbox change %d\n", i);
-	EDIT_SET_TEXT(E1, "");
-	EDIT_SET_TEXT(E2, "");
-}
-
-int WINAPI WinMain(HINSTANCE hInstanciaAct, HINSTANCE hInstanciaPrev, LPSTR IpCmdLine, int iCmdShow){
-    
     AllocConsole();
     freopen("CONIN$", "r",stdin); 
     freopen("CONOUT$","w",stdout); 
@@ -119,27 +69,13 @@ int WINAPI WinMain(HINSTANCE hInstanciaAct, HINSTANCE hInstanciaPrev, LPSTR IpCm
     
     hf = CreateFont(/*size=*/-12, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, "MS Sans Serif");
 
-    B1 = BUTTON_DEF  (10,  8,   175, 22, "B1");
-    B2 = BUTTON_DEF  (10,  38,  175, 22, "B2");
-    B3 = BUTTON_DEF  (10,  68,  175, 22, "B3");
-    E1 = EDIT_DEF    (10,  98,  175, 22, "");
-    E2 = EDIT_DEF    (10, 128,  175, 22, "");
-    C1 = CHECKBOX_DEF(10, 158,  175, 22, "checkbox");
+    create_widget();
 
-    BUTTON_DEF_ON_CLICK(B1, B_pressed);
-    BUTTON_DEF_ON_CLICK(B2, B_pressed);
-    BUTTON_DEF_ON_CLICK(B3, B_pressed);
-
-    EDITBOX_DEF_ON_CHANGE(E1, Text_changed);
-    EDITBOX_DEF_ON_CHANGE(E2, Text_changed);
-
-    CHECKBOX_DEF_ON_CLICK(C1, CheckBox_change);
-    
     SendMessage(hWnd,  WM_CHANGEUISTATE, (WPARAM)(0x10001),(LPARAM)(0));
-    
+
     UpdateWindow(hWnd);
 
-    //_beginthread(fn , 0, 0);
+    _beginthread(app_thread , 0, 0);
     
     while(GetMessage(&msg, NULL, 0, 0) > 0)
     {
@@ -150,20 +86,20 @@ int WINAPI WinMain(HINSTANCE hInstanciaAct, HINSTANCE hInstanciaPrev, LPSTR IpCm
     return msg.wParam;
 }
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam){
-    switch(msg){
-        case WM_CREATE:{
-            // hBtn = CreateWindow("BUTTON", "RESET",     WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, 82.5, 48, 175, 22.5, hWnd, (HMENU)ID_BTNHI, GetModuleHandle(NULL), NULL);
-            // hTxt = CreateWindow("EDIT",   "0",         WS_VISIBLE | WS_CHILD | WS_BORDER,        82.5, 98, 175, 22.5,   hWnd, (HMENU)ID_TXT, GetModuleHandle(NULL), NULL);
+LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+    switch(msg)
+    {
+        case WM_CREATE:
+        {
             break;
         }
-        
-         
+                 
         /* Colore text box EDITABILE */
         case WM_CTLCOLOREDIT:
         {
           HDC hdc = (HDC)wParam;
-          if (attivo && (HANDLE)lParam==hTxt)
+          if (/*attivo &&*/ (HANDLE)lParam==dialog[E1].hwnd)
           {
                 // printf("ECCOLO1\n");
                 SetTextColor(hdc, RGB(0,100,255));  // yourColor is a WORD and it's format is 0x00BBGGRR
@@ -217,20 +153,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam){
         
         /* Bordo bottoni */
         case WM_CTLCOLORBTN:
+        {
+            HDC hdc = (HDC)wParam;
+            SetBkColor(hdc, MY_BACKGOUND_COLOR);
+            return (LRESULT)CreateSolidBrush(MY_BACKGOUND_COLOR); // GetSysColorBrush(COLOR_WINDOW);/* (LRESULT)hBrushColor;*/
+        }
 
         /* Etichetta checkbox       */
         /* Edit Multiline READ ONLY */
         case WM_CTLCOLORSTATIC:
         {
-          if ((HANDLE)lParam==hTxtML)
-          {
+          // if ((HANDLE)lParam==dialog[E1].hwnd)
+          // {
                 HDC hdc = (HDC)wParam;
                 printf("ECCOLO\n");
                 SetBkColor(hdc, MY_EDIT_ML_BKCOLOR);
-                return (LRESULT) CreateSolidBrush(MY_EDIT_ML_BKCOLOR); //GetStockObject(DC_BRUSH); // return a DC brush.
-          }
-
-                return (LRESULT)CreateSolidBrush(MY_BACKGOUND_COLOR); // GetSysColorBrush(COLOR_WINDOW);/* (LRESULT)hBrushColor;*/
+          //       return (LRESULT) CreateSolidBrush(MY_EDIT_ML_BKCOLOR); //GetStockObject(DC_BRUSH); // return a DC brush.
+          // }
+                return (LRESULT)CreateSolidBrush(MY_EDIT_ML_BKCOLOR); // GetSysColorBrush(COLOR_WINDOW);/* (LRESULT)hBrushColor;*/
         }
         
         default:

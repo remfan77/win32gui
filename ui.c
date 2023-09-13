@@ -49,4 +49,12 @@ void CHECKBOX_DEF_ON_CLICK(int i, void *fn)
 	dialog[i].fn = fn;
 }
 
+void ENABLE_WIDGET(int i, int state)
+{
+	EnableWindow(dialog[i].hwnd, state);
+}
 
+void RO_WIDGET(int i, int state)
+{
+	    SendMessage(dialog[i].hwnd,  EM_SETREADONLY, state, 0);
+}
