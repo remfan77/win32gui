@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "ui.h"
 
-int B1, B2, B3, E1, E2, C1;
+int B1, B2, B3, E1, E2, C1, COMBO1;
 
 void app_thread(void *dummy)
 {
@@ -74,6 +74,12 @@ void create_widget(void)
     E2 = EDIT_DEF    (10, 128,  175, 22, "");
     C1 = CHECKBOX_DEF(10, 158,  175, 22, "checkbox");
 
+    COMBO1 = COMBOBOX_DEF(10, 188,  175, 22, "combobox");
+    COMBOBOX_ADD(COMBO1, "item1");
+    COMBOBOX_ADD(COMBO1, "item2");
+    COMBOBOX_ADD(COMBO1, "item3");
+    COMBOBOX_ADD(COMBO1, "item4");
+
     BUTTON_DEF_ON_CLICK(B1, B_pressed);
     BUTTON_DEF_ON_CLICK(B2, B_pressed);
     BUTTON_DEF_ON_CLICK(B3, B_pressed);
@@ -82,4 +88,5 @@ void create_widget(void)
     EDITBOX_DEF_ON_CHANGE(E2, Text_changed);
 
     CHECKBOX_DEF_ON_CLICK(C1, CheckBox_change);
+
 }

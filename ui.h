@@ -5,6 +5,7 @@
 #define TYPE_BUTTON   0
 #define TYPE_EDITBOX  1
 #define TYPE_CHECKBOX 2
+#define TYPE_COMBOBOX 3
 
 struct DIALOG
 {
@@ -33,3 +34,6 @@ int  CHECKBOX_DEF(int x0, int y0, int size_x, int size_y, char *text);
 void CHECKBOX_DEF_ON_CLICK(int i, void *fn);
 void ENABLE_WIDGET(int i, int state);
 void RO_WIDGET(int i, int state);
+int COMBOBOX_DEF(int x0, int y0, int size_x, int size_y, char *text);
+int COMBOBOX_ADD(int i, char *item);
+int COMBOBOX_SELECT(int i, int item);

@@ -40,7 +40,7 @@ int CHECKBOX_DEF(int x0, int y0, int size_x, int size_y, char *text)
 {
 	dialog[N].hwnd = CreateWindow("BUTTON", text, WS_VISIBLE | WS_CHILD | BS_AUTOCHECKBOX , x0, y0, size_x, size_y, hWnd, (HMENU)N, GetModuleHandle(NULL), NULL);
 	dialog[N].type = TYPE_CHECKBOX;
-        SendMessage(dialog[N].hwnd, WM_SETFONT, (WPARAM)hf, 0);
+    SendMessage(dialog[N].hwnd, WM_SETFONT, (WPARAM)hf, 0);
 	return N++;
 }
 
@@ -57,4 +57,22 @@ void ENABLE_WIDGET(int i, int state)
 void RO_WIDGET(int i, int state)
 {
 	    SendMessage(dialog[i].hwnd,  EM_SETREADONLY, state, 0);
+}
+
+int COMBOBOX_DEF(int x0, int y0, int size_x, int size_y, char *text)
+{
+	dialog[N].hwnd = CreateWindow("COMBOBOX", text, WS_VISIBLE | WS_CHILD | CBS_DROPDOWNLIST | WS_TABSTOP , x0, y0, size_x, size_y, hWnd, (HMENU)N, GetModuleHandle(NULL), NULL);
+	dialog[N].type = TYPE_COMBOBOX;
+    SendMessage(dialog[N].hwnd, WM_SETFONT, (WPARAM)hf, 0);
+	return N++;
+}
+
+int COMBOBOX_ADD(int i, char *item)
+{
+	return SendMessage(dialog[i].hwnd, CB_ADDSTRING, 0, (LPARAM) item);
+}
+
+int COMBOBOX_SELECT(int i, int item)
+{
+	return SendMessage(dialog[i].hwnd, CB_SETCURSEL, 0, (LPARAM) item);
 }
