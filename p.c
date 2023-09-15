@@ -127,8 +127,6 @@ int WINAPI WinMain(HINSTANCE hInstanciaAct, HINSTANCE hInstanciaPrev, LPSTR IpCm
     return msg.wParam;
 }
 
-char buf[1024*1024];
-
 void AppendText( HWND hwnd, char *newText )
 {
     SendMessageA(hTxtML, EM_SETSEL, 0, -1); //Select all

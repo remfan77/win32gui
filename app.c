@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "ui.h"
 
-int B1, B2, B3, E1, E2, C1, COMBO1;
+int B1, B2, B3, B4, E1, E2, C1, COMBO1, EML1;
 
 void app_thread(void *dummy)
 {
@@ -20,6 +20,7 @@ void app_thread(void *dummy)
         printf("%d", cnt > 10);
         Sleep(100);
         printf("."); fflush(stdout);
+        EDITBOX_MULTILINE_APPEND_TEXT(EML1, "@");
         continue;
         
         #if 0
@@ -70,11 +71,13 @@ void create_widget(void)
     B1 = BUTTON_DEF  (10,  8,   175, 22, "B1");
     B2 = BUTTON_DEF  (10,  38,  175, 22, "B2");
     B3 = BUTTON_DEF  (10,  68,  175, 22, "B3");
+    B4 = BUTTON_DEF  (200, 8,   125, 90, "CLEAR");
     E1 = EDIT_DEF    (10,  98,  175, 22, "");
     E2 = EDIT_DEF    (10, 128,  175, 22, "");
     C1 = CHECKBOX_DEF(10, 158,  175, 22, "checkbox");
+    EML1 = EDITBOX_MULTILINE_DEF(10, 188,  175, 100, "edit multi");
+    COMBO1 = COMBOBOX_DEF(10, 218,  175, 22, "combobox");
 
-    COMBO1 = COMBOBOX_DEF(10, 188,  175, 22, "combobox");
     COMBOBOX_ADD(COMBO1, "item1");
     COMBOBOX_ADD(COMBO1, "item2");
     COMBOBOX_ADD(COMBO1, "item3");
@@ -88,5 +91,4 @@ void create_widget(void)
     EDITBOX_DEF_ON_CHANGE(E2, Text_changed);
 
     CHECKBOX_DEF_ON_CLICK(C1, CheckBox_change);
-
 }

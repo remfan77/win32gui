@@ -2,10 +2,11 @@
 
 #define N_MAX 100
 
-#define TYPE_BUTTON   0
-#define TYPE_EDITBOX  1
-#define TYPE_CHECKBOX 2
-#define TYPE_COMBOBOX 3
+#define TYPE_BUTTON         0
+#define TYPE_EDITBOX        1
+#define TYPE_CHECKBOX       2
+#define TYPE_COMBOBOX       3
+#define TYPE_EDIT_MULTILINE 4
 
 struct DIALOG
 {

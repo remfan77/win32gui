@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include "ui.h"
 
+#define SIMPLE 1
+
 #define MY_BACKGOUND_COLOR RGB(0,245,0)
 #define MY_EDIT_ML_BKCOLOR RGB(0,235,235)
 
@@ -9,22 +11,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 WNDCLASSEX class_;
 
-int cnt;
-HWND hBtn, hBtn1, hTxt, hTxt1, hTxtML, hCheckBox;
 COLORREF backColor;
 char attivo;
-char checkBoxVal;
 HWND hWnd;
 HFONT hf;
 
 void app_thread(void *dummy);
-
-void AppendText( HWND hwnd, char *newText )
-{
-    SendMessageA(hTxtML, EM_SETSEL, 0, -1); //Select all
-    SendMessageA(hTxtML, EM_SETSEL, -1, -1);//Unselect and stay at the end pos
-    SendMessageA(hTxtML, EM_REPLACESEL, 0, (LPARAM)(newText)); //append text to current pos and scroll down
-}
 
 int WINAPI WinMain(HINSTANCE hInstanciaAct, HINSTANCE hInstanciaPrev, LPSTR IpCmdLine, int iCmdShow)
 {
@@ -46,8 +38,9 @@ int WINAPI WinMain(HINSTANCE hInstanciaAct, HINSTANCE hInstanciaPrev, LPSTR IpCm
     class_.hCursor = LoadCursor(NULL, IDC_ARROW);
     class_.lpszClassName = "MYCLASS";
     class_.lpszMenuName = NULL;
-    class_.hbrBackground = CreateSolidBrush(MY_BACKGOUND_COLOR);
-    
+    class_.hbrBackground = SIMPLE ?
+        (HBRUSH)(COLOR_WINDOW) :
+        CreateSolidBrush(MY_BACKGOUND_COLOR);    
    
     if(!RegisterClassEx(&class_))
     {
@@ -67,7 +60,7 @@ int WINAPI WinMain(HINSTANCE hInstanciaAct, HINSTANCE hInstanciaPrev, LPSTR IpCm
     
     ShowWindow(hWnd, iCmdShow);
     
-    hf = CreateFont(/*size=*/-12, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, "MS Sans Serif");
+    hf = CreateFont(/*size=*/12, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, "MS Sans Serif");
 
     create_widget();
 
@@ -95,6 +88,49 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
             break;
         }
                  
+        case WM_COMMAND:
+        {
+            // switch(LOWORD(wParam))
+            // {
+                int j;
+                // static int cnt;
+                // printf("%5d WM_COMMAND %d %d\n", cnt++, LOWORD(wParam), HIWORD(wParam));
+                for (j = 0; j < N; j++)
+                {
+                    if (LOWORD(wParam) == j)
+                    {
+                        switch (dialog[j].type)
+                        {
+                            case TYPE_CHECKBOX:
+                            case TYPE_BUTTON:
+                                if (dialog[j].fn)
+                                {
+                                    dialog[j].fn(j);
+                                }
+                                break;
+
+                            case TYPE_EDITBOX:
+                                if (HIWORD(wParam) == EN_CHANGE)
+                                {
+                                    if (dialog[j].fn)
+                                    {
+                                        dialog[j].fn(j);
+                                    }
+                                }
+                                break;
+                                }
+                }
+            }
+            break;
+        }
+        
+        case WM_DESTROY:
+        {
+            PostQuitMessage(0);
+            break;
+        }
+
+        #if SIMPLE == 0
         /* Colore text box EDITABILE */
         case WM_CTLCOLOREDIT:
         {
@@ -108,49 +144,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
           }
           return (LRESULT) GetStockObject(DC_BRUSH); // return a DC brush.
         }
-        
-        case WM_COMMAND:
-        {
-            // switch(LOWORD(wParam))
-            // {
-                int j;
-                // static int cnt;
-                // printf("%5d WM_COMMAND %d %d\n", cnt++, LOWORD(wParam), HIWORD(wParam));
-                for (j = 0; j < N; j++)
-                {
-                    if (LOWORD(wParam) == j)
-                    {
-                        switch (dialog[j].type)
-			{
-				case TYPE_CHECKBOX:
-				case TYPE_BUTTON:
-					if (dialog[j].fn)
-					{
-						dialog[j].fn(j);
-					}
-					break;
 
-				case TYPE_EDITBOX:
-					if (HIWORD(wParam) == EN_CHANGE)
-					{
-						if (dialog[j].fn)
-						{
-							dialog[j].fn(j);
-						}
-					}
-					break;
-                    }
-                  }
-                }
-                break;
-        }
-        
-        case WM_DESTROY:
-        {
-            PostQuitMessage(0);
-            break;
-        }
-        
         /* Bordo bottoni */
         case WM_CTLCOLORBTN:
         {
@@ -172,6 +166,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
           // }
                 return (LRESULT)CreateSolidBrush(MY_EDIT_ML_BKCOLOR); // GetSysColorBrush(COLOR_WINDOW);/* (LRESULT)hBrushColor;*/
         }
+        #endif
         
         default:
         {

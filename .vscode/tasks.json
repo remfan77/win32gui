@@ -12,10 +12,22 @@
                 "kind": "build",
                 "isDefault": true
             },
+
             "presentation": {
                 "clear": true,
                 "showReuseMessage": true
             }
-        }
+        },
+        {
+            "label": "run",
+            "type": "shell",
+            "command": "./a.exe",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },        
+
     ]
 }
