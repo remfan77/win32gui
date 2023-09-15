@@ -6,39 +6,12 @@
         {
             "label": "make",
             "type": "shell",
-            "command": "./gnumake-4.2.1.exe",
+            "command": "./build1.bat",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "presentation": {
-                "clear": true,
-                "showReuseMessage": true
-            }
-        },
-        {
-            "label": "clean",
-            "type": "shell",
-            "command": "./gnumake-4.2.1.exe clean",
-            "presentation": {
-                "clear": true,
-                "showReuseMessage": true
-            }
-        },
-        {
-            "label": "prog",
-            "type": "shell",
-            "command": "C:/Programmi/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin/STM32_Programmer_CLI.exe -c port=swd -d build/CVPV-3.00.hex -Rst",
-            "presentation": {
-                "clear": true,
-                "showReuseMessage": true
-            },
-        },
-        {
-            "label": "reset",
-            "type": "shell",
-            "command": "C:/Programmi/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin/STM32_Programmer_CLI.exe -c port=swd -Rst",
             "presentation": {
                 "clear": true,
                 "showReuseMessage": true
