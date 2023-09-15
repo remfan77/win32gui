@@ -1,0 +1,48 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "make",
+            "type": "shell",
+            "command": "./gnumake-4.2.1.exe",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "clear": true,
+                "showReuseMessage": true
+            }
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "./gnumake-4.2.1.exe clean",
+            "presentation": {
+                "clear": true,
+                "showReuseMessage": true
+            }
+        },
+        {
+            "label": "prog",
+            "type": "shell",
+            "command": "C:/Programmi/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin/STM32_Programmer_CLI.exe -c port=swd -d build/CVPV-3.00.hex -Rst",
+            "presentation": {
+                "clear": true,
+                "showReuseMessage": true
+            },
+        },
+        {
+            "label": "reset",
+            "type": "shell",
+            "command": "C:/Programmi/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin/STM32_Programmer_CLI.exe -c port=swd -Rst",
+            "presentation": {
+                "clear": true,
+                "showReuseMessage": true
+            }
+        }
+    ]
+}
