@@ -82,6 +82,7 @@ int EDITBOX_MULTILINE_DEF(int x0, int y0, int size_x, int size_y, char *text)
 	dialog[N].hwnd = CreateWindow("EDIT", text, WS_VSCROLL | WS_VISIBLE | WS_CHILD | WS_BORDER | ES_LEFT | ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY , x0, y0, size_x, size_y, hWnd, (HMENU)N, GetModuleHandle(NULL), NULL);
 	dialog[N].type = TYPE_EDIT_MULTILINE;
     SendMessage(dialog[N].hwnd, WM_SETFONT, (WPARAM)hf, 0);
+	SendMessage(dialog[N].hwnd, EM_LIMITTEXT, 200, 0);
 	return N++;
 }
 
@@ -94,7 +95,7 @@ void EDITBOX_MULTILINE_APPEND_TEXT( int i, char *newText )
 
 int LABEL_DEF(int x0, int y0, int size_x, int size_y, char *text)
 {
-    dialog[N].hwnd = CreateWindow("STATIC","Enter Age:", WS_VISIBLE | WS_CHILD | SS_RIGHT, x0, y0, size_x, size_y, hWnd, (HMENU)N, GetModuleHandle(NULL), NULL);
+    dialog[N].hwnd = CreateWindow("STATIC","Enter Age:", WS_VISIBLE | WS_CHILD | SS_LEFT, x0, y0, size_x, size_y, hWnd, (HMENU)N, GetModuleHandle(NULL), NULL);
 	dialog[N].type = TYPE_LABEL;
     SendMessage(dialog[N].hwnd, WM_SETFONT, (WPARAM)hf, 0);
 	return N++;

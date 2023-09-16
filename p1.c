@@ -18,21 +18,22 @@ HFONT hf;
 
 void app_thread(void *dummy);
 
-int WINAPI WinMain(HINSTANCE hInstanciaAct, HINSTANCE hInstanciaPrev, LPSTR IpCmdLine, int iCmdShow)
+int /*WINAPI*/ myWinMain(int size_x, int size_y) // (HINSTANCE __hInstanciaAct, HINSTANCE __hInstanciaPrev, LPSTR __IpCmdLine, int __iCmdShow)
 {
     AllocConsole();
     freopen("CONIN$", "r",stdin); 
     freopen("CONOUT$","w",stdout); 
     freopen("CONOUT$","w",stderr); 
 
-    MSG msg;
+    // __hInstanciaAct = 0;
+    // __iCmdShow = 1;
     
     class_.cbSize = sizeof(WNDCLASSEX);
     class_.cbWndExtra = 0;
     class_.cbClsExtra = 0;
     class_.style = CS_HREDRAW|CS_VREDRAW;
     class_.lpfnWndProc = WndProc;
-    class_.hInstance = hInstanciaAct;
+    class_.hInstance = 0; //__hInstanciaAct;
     class_.hIcon = LoadImage(NULL, "icoff.ico", IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_LOADFROMFILE);
     class_.hIconSm = LoadImage(NULL, "icoff.ico", IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_LOADFROMFILE);
     class_.hCursor = LoadCursor(NULL, IDC_ARROW);
@@ -48,7 +49,11 @@ int WINAPI WinMain(HINSTANCE hInstanciaAct, HINSTANCE hInstanciaPrev, LPSTR IpCm
         return EXIT_FAILURE;
     }
     
-    hWnd = CreateWindowEx(0, "MYCLASS", "Title", WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU, CW_USEDEFAULT, CW_USEDEFAULT, 340, 340, HWND_DESKTOP, NULL, hInstanciaAct, NULL);
+    hWnd = CreateWindowEx(0,
+                          "MYCLASS",
+                          "Title",
+                          WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU, CW_USEDEFAULT, CW_USEDEFAULT,
+                          size_x, size_y, HWND_DESKTOP, NULL, 0/*__hInstanciaAct*/, NULL);
     if(hWnd == NULL)
     {
         MessageBox(NULL, "NON2", "ERROR", MB_ICONERROR);
@@ -58,11 +63,15 @@ int WINAPI WinMain(HINSTANCE hInstanciaAct, HINSTANCE hInstanciaPrev, LPSTR IpCm
     // HBRUSH brush = CreateSolidBrush(RGB(140, 140, 140));
     // SetClassLongPtr(hWnd, GCLP_HBRBACKGROUND, (LONG_PTR)brush);
     
-    ShowWindow(hWnd, iCmdShow);
+    ShowWindow(hWnd, 1/*__iCmdShow*/);
     
     hf = CreateFont(/*size=*/12, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, "MS Sans Serif");
+}
 
-    create_widget();
+void main_loop(void)
+{
+    MSG msg;
+    // create_widget();
 
     SendMessage(hWnd,  WM_CHANGEUISTATE, (WPARAM)(0x10001),(LPARAM)(0));
 
