@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "ui.h"
 
-int B1, B2, B3, B4, E1, E2, C1, COMBO1, EML1;
+int B1, B2, B3, B4, E1, E2, C1, COMBO1, EML1, L1;
 
 void app_thread(void *dummy)
 {
@@ -75,8 +75,9 @@ void create_widget(void)
     E1 = EDIT_DEF    (10,  98,  175, 22, "");
     E2 = EDIT_DEF    (10, 128,  175, 22, "");
     C1 = CHECKBOX_DEF(10, 158,  175, 22, "checkbox");
-    EML1 = EDITBOX_MULTILINE_DEF(10, 188,  175, 100, "edit multi");
     COMBO1 = COMBOBOX_DEF(10, 218,  175, 22, "combobox");
+    L1     = LABEL_DEF(10, 248,  90, 22, "LABEL");
+    EML1 = EDITBOX_MULTILINE_DEF(10, 278,  275, 50, "edit multi");
 
     COMBOBOX_ADD(COMBO1, "item1");
     COMBOBOX_ADD(COMBO1, "item2");

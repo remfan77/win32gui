@@ -7,6 +7,7 @@
 #define TYPE_CHECKBOX       2
 #define TYPE_COMBOBOX       3
 #define TYPE_EDIT_MULTILINE 4
+#define TYPE_LABEL          5
 
 struct DIALOG
 {
@@ -38,3 +39,4 @@ void RO_WIDGET(int i, int state);
 int COMBOBOX_DEF(int x0, int y0, int size_x, int size_y, char *text);
 int COMBOBOX_ADD(int i, char *item);
 int COMBOBOX_SELECT(int i, int item);
+int LABEL_DEF(int x0, int y0, int size_x, int size_y, char *text);
