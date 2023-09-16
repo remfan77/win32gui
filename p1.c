@@ -18,7 +18,8 @@ HFONT hf;
 
 void app_thread(void *dummy);
 
-int /*WINAPI*/ myWinMain(int size_x, int size_y) // (HINSTANCE __hInstanciaAct, HINSTANCE __hInstanciaPrev, LPSTR __IpCmdLine, int __iCmdShow)
+// int /*WINAPI*/ myWinMain(int size_x, int size_y) // (HINSTANCE __hInstanciaAct, HINSTANCE __hInstanciaPrev, LPSTR __IpCmdLine, int __iCmdShow)
+int create_main_win(int size_x, int size_y)
 {
     AllocConsole();
     freopen("CONIN$", "r",stdin); 
@@ -77,15 +78,11 @@ void main_loop(void)
 
     UpdateWindow(hWnd);
 
-    _beginthread(app_thread , 0, 0);
-    
     while(GetMessage(&msg, NULL, 0, 0) > 0)
     {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
-    
-    return msg.wParam;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)

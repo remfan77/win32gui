@@ -1,8 +1,9 @@
 #include <windows.h>
 #include <stdio.h>
 #include "ui.h"
+#include "p1.h"
 
-int B1, B2, B3, B4, E1, E2, C1, COMBO1, EML1, L1;
+int B1, B2, B3, B4, E1, E2, C1, COMBO1, EML1, L1, LB1;
 
 void app_thread(void *dummy)
 {
@@ -72,12 +73,20 @@ void create_widget(void)
     B2     = BUTTON_DEF  (10,  38,  175, 22, "B2");
     B3     = BUTTON_DEF  (10,  68,  175, 22, "B3");
     B4     = BUTTON_DEF  (200, 8,   125, 90, "CLEAR");
+    LB1    = LISTBOX_DEF (200, 100, 125, 100);
     E1     = EDIT_DEF    (10,  98,  175, 22, "");
     E2     = EDIT_DEF    (10, 128,  175, 22, "");
     C1     = CHECKBOX_DEF(10, 158,  175, 22, "checkbox");
     COMBO1 = COMBOBOX_DEF(10, 218,  175, 22, "combobox");
     L1     = LABEL_DEF   (10, 248,  90, 22, "LABEL");
     EML1   = EDITBOX_MULTILINE_DEF(10, 278,  275, 100, "edit multi");
+
+    for (int i=50; i; i--)
+    {
+        char s[64];
+        sprintf(s, "CIAO%d", i);
+        LISTBOX_ADD (LB1, s);
+    }    
 
     COMBOBOX_ADD(COMBO1, "item1");
     COMBOBOX_ADD(COMBO1, "item2");
@@ -96,7 +105,8 @@ void create_widget(void)
 
 void main(int argc, char *argv[])
 {
-    myWinMain(340,500);
+    create_main_win(340,500);
     create_widget();
+    _beginthread(app_thread , 0, 0);
     main_loop();
 }
