@@ -49,6 +49,21 @@ void CHECKBOX_DEF_ON_CLICK(int i, void *fn)
 	dialog[i].fn = fn;
 }
 
+int IS_CHECKBOX_CHECKED(int i)
+{
+	printf("IsDlgButtonChecked=%d\n", IsDlgButtonChecked(hWnd, i));
+	switch (IsDlgButtonChecked(hWnd, i))
+	{
+		case BST_CHECKED:
+			return 1;
+		case BST_UNCHECKED:
+		 	return 0;
+		default:
+		case BST_INDETERMINATE:
+			return 2;
+	}
+}
+
 void ENABLE_WIDGET(int i, int state)
 {
 	EnableWindow(dialog[i].hwnd, state);

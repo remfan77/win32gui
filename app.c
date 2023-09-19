@@ -12,16 +12,19 @@ void app_thread(void *dummy)
     {
         static int cnt;
         sprintf(s, "%6d\r\n", cnt);
-        cnt++;
-        if (cnt == 20)
-            cnt = 0;
+        // if (cnt == 20)
+        //     cnt = 0;
         ENABLE_WIDGET(B1, cnt > 10);
         ENABLE_WIDGET(B2, cnt > 10);
         RO_WIDGET(E1, cnt > 10);
         printf("%d", cnt > 10);
         Sleep(100);
         printf("."); fflush(stdout);
-        EDITBOX_MULTILINE_APPEND_TEXT(EML1, s);
+        if (IS_CHECKBOX_CHECKED(C1))
+        {
+            EDITBOX_MULTILINE_APPEND_TEXT(EML1, s);
+            cnt++;
+        }
         continue;
         
         #if 0
