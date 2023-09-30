@@ -15,6 +15,7 @@ COLORREF backColor;
 char attivo;
 HWND hWnd;
 HFONT hf;
+int font_h;
 
 void app_thread(void *dummy);
 
@@ -66,7 +67,21 @@ int create_main_win(int size_x, int size_y)
     
     ShowWindow(hWnd, 1/*__iCmdShow*/);
     
-    hf = CreateFont(/*size=*/12, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, "MS Sans Serif");
+    hf = CreateFont(/*size=*/15, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, "MS Sans Serif");
+    
+    SendMessage(hWnd, WM_SETFONT, (WPARAM)hf, 0);
+    
+    // TEXTMETRIC tm;
+    // GetTextMetrics(GetDC(hWnd), &tm);
+    // font_h =  (tm.tmHeight + tm.tmExternalLeading) + 14;
+    // GetDeviceCaps(GetDC(hWnd), LOGPIXELSY) / 72;
+
+    // (10*15+9)/10; // +2; // FM.tmHeight+10;
+    // DWORD nExStyles = GetWindowLongPtr(hWnd, GWL_EXSTYLE);
+    // if(nExStyles & WS_EX_CLIENTEDGE)
+	//    font_h += GetSystemMetrics(SM_CYEDGE) * 2;
+    // if(nExStyles & WS_EX_STATICEDGE)
+	//    font_h += GetSystemMetrics(SM_CYBORDER) * 2;
 }
 
 void main_loop(void)
@@ -124,7 +139,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
                                     }
                                 }
                                 break;
+                            
+                            case TYPE_LISTBOX:
+                                if (HIWORD(wParam) == LBN_SELCHANGE)
+                                {
+                                    if (dialog[j].fn)
+                                    {
+                                        dialog[j].fn(j);
+                                    }
                                 }
+                                break;
+                            case TYPE_COMBOBOX:
+                                if (HIWORD(wParam) == CBN_SELCHANGE)
+                                {
+                                    if (dialog[j].fn)
+                                    {
+                                        dialog[j].fn(j);
+                                    }
+                                }
+                                break;
+                        }
                 }
             }
             break;

@@ -44,4 +44,4 @@ int LABEL_DEF(int x0, int y0, int size_x, int size_y, char *text);
 int LISTBOX_DEF(int x0, int y0, int size_x, int size_y);
 void EDITBOX_MULTILINE_APPEND_TEXT( int i, char *newText );
 void LISTBOX_ADD(int i, char *item);
-int EDITBOX_MULTILINE_DEF(int x0, int y0, int size_x, int size_y, char *text);
+int EDITBOX_MULTILINE_DEF(int x0, int y0, int size_x, int size_y);

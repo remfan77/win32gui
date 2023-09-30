@@ -53,6 +53,16 @@ void app_thread(void *dummy)
     }
 }
 
+void listbox_selected(int i)
+{
+    int pos = (int)SendMessage(dialog[i].hwnd, LB_GETCURSEL, 0, 0);
+    int idx =(int)SendMessage(dialog[i].hwnd, LB_GETITEMDATA, pos, 0);
+    if (idx != LB_ERR)
+    {
+        printf("Selected pos=%d idx=%d\n", pos, idx);
+    }
+}
+
 void B_pressed(int i)
 {
 	printf("pressed %d\n", i);
@@ -66,8 +76,13 @@ void Text_changed(int i)
 void CheckBox_change(int i)
 {
 	printf("Checkbox change %d\n", i);
-	EDIT_SET_TEXT(E1, "");
-	EDIT_SET_TEXT(E2, "");
+}
+
+void combo_selected(int i)
+{
+    int comboIndex = SendMessage(dialog[i].hwnd, (UINT) CB_GETCURSEL, 0, 0);
+    printf("selected combo %d\n", comboIndex);
+    // SendMessage(dialog[i].hwnd, (UINT)CB_GETLBTEXT, (WPARAM)comboIndex, (LPARAM)listName);
 }
 
 void create_widget(void)
@@ -77,24 +92,26 @@ void create_widget(void)
     B3     = BUTTON_DEF  (10,  68,  175, 22, "B3");
     B4     = BUTTON_DEF  (200, 8,   125, 90, "CLEAR");
     LB1    = LISTBOX_DEF (200, 100, 125, 100);
-    E1     = EDIT_DEF    (10,  98,  175, 22, "");
-    E2     = EDIT_DEF    (10, 128,  175, 22, "");
+    E1     = EDIT_DEF    (10,  98,  175, 17, "");
+    E2     = EDIT_DEF    (10, 128,  175, 17, "");
     C1     = CHECKBOX_DEF(10, 158,  175, 22, "checkbox");
     COMBO1 = COMBOBOX_DEF(10, 218,  175, 22, "combobox");
     L1     = LABEL_DEF   (10, 248,  90, 22, "LABEL");
-    EML1   = EDITBOX_MULTILINE_DEF(10, 278,  275, 100, "edit multi");
+    EML1   = EDITBOX_MULTILINE_DEF(10, 278,  275, 100);
 
     for (int i=50; i; i--)
     {
         char s[64];
         sprintf(s, "CIAO%d", i);
         LISTBOX_ADD (LB1, s);
-    }    
+    }
+    LISTBOX_DEF_ON_CLICK(LB1, listbox_selected);
 
     COMBOBOX_ADD(COMBO1, "item1");
     COMBOBOX_ADD(COMBO1, "item2");
     COMBOBOX_ADD(COMBO1, "item3");
     COMBOBOX_ADD(COMBO1, "item4");
+    COMBOBOX_DEF_ON_CLICK(COMBO1, combo_selected);
 
     BUTTON_DEF_ON_CLICK(B1, B_pressed);
     BUTTON_DEF_ON_CLICK(B2, B_pressed);
@@ -110,6 +127,6 @@ void main(int argc, char *argv[])
 {
     create_main_win(340,500);
     create_widget();
-    _beginthread(app_thread , 0, 0);
+    // _beginthread(app_thread , 0, 0);
     main_loop();
 }
